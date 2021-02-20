@@ -8,22 +8,33 @@ from discord.ext import commands
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 
-MESSAGES = [
-    "test1",
-    "test2",
-    "test3"
-]
-
 bot = commands.Bot(command_prefix="/")
 
 
-@bot.command()
+@bot.event
+async def on_ready():
+    bot.messages = []
+    print(f"Logged in as {bot.user.name} {bot.user.id}")
+
+
+@bot.command(name="ping")
 async def ping(ctx):
     await ctx.channel.send("pong")
 
 
-@bot.command()
+@bot.command(name="get_msg")
 async def get_msg(ctx):
-    await ctx.channel.send(random.choice(MESSAGES))
+    if len(bot.messages) > 0:
+        await ctx.channel.send(bot.messages.pop())
+    else:
+        await ctx.channel.send("No messages!")
+
+
+@bot.event
+async def on_message(message: discord.Message):
+    if isinstance(message.channel, discord.channel.DMChannel) and not message.author.bot:
+        bot.messages.append(message.content)
+        await message.channel.send("Received!")
+    await bot.process_commands(message)
 
 bot.run(DISCORD_TOKEN)

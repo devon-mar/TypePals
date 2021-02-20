@@ -22,7 +22,7 @@ async def ping(ctx):
     await ctx.channel.send("pong")
 
 
-@bot.command(name="get_msg")
+@bot.command(name="get")
 async def get_msg(ctx):
     if len(bot.messages) > 0:
         # TODO: change this

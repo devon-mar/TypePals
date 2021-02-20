@@ -43,7 +43,7 @@ async def on_message(message: discord.Message):
             if m.reply_id == message.reference.message_id:
                 m.replied = True
                 user = await bot.fetch_user(m.user_id)
-                await user.send(f"You got a reply from {message.author.name}: {message.content}")
+                await user.send(f"You got a reply: {message.content}")
                 await message.channel.send("Sent your reply")
     elif message.content.startswith('/'):
         await bot.process_commands(message)

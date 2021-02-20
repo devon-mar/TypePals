@@ -33,8 +33,10 @@ async def get_msg(ctx):
 @bot.event
 async def on_message(message: discord.Message):
     if isinstance(message.channel, discord.channel.DMChannel) and not message.author.bot:
-        bot.messages.append(message.content)
-        await message.channel.send("Received!")
-    await bot.process_commands(message)
+        if message.content.startswith('/'):
+            await bot.process_commands(message)
+        else:
+            bot.messages.append(message.content)
+            await message.channel.send("Received!")
 
 bot.run(DISCORD_TOKEN)

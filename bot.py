@@ -62,7 +62,7 @@ async def get_msg(ctx):
     brief="Bot sends you the responses sent to your message/request",
     description="The bot will send back the responses to each of your messages/requests."
 )
-async def retrieve_my_msgs(ctx, as_image: str = ""):
+async def retrieve_my_msgs(ctx, as_images: str = ""):
     my_mrs = session.query(MessageRequest).filter_by(user_id=ctx.author.id)
     if my_mrs.count() == 0:
         await ctx.send(constants.NO_REQUESTS)
@@ -70,10 +70,10 @@ async def retrieve_my_msgs(ctx, as_image: str = ""):
         mc = req.responses.count()
         if mc == 0:
             await ctx.send(render_template("no_replies.j2", req=req))
-        elif as_image == "image":
+        elif as_images == "images":
             files = [get_image("1.jpg", r.message) for r in req.responses]
             # TODO fix files limit
-            page_count = ceildiv(files, 10)
+            page_count = ceildiv(len(files), 10)
             for i in range(page_count):
                 await ctx.send(
                     render_template("read_replies_img.j2", req=req, i=i, pc=page_count),

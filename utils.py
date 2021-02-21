@@ -24,9 +24,9 @@ def check_message(msg: str) -> bool:
 def get_image(background: str, msg: str) -> discord.File:
     img = Image.open(f"backgrounds/{background}")
     bio = io.BytesIO()
-    img.save(bio, format="PNG", filename="reply.PNG")
+    img.save(bio, format="PNG")
     bio.seek(0)
-    return discord.File(bio)
+    return discord.File(bio, filename="reply.PNG")
 
 
 def ceildiv(a, b):

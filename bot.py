@@ -73,13 +73,13 @@ async def on_message(message: discord.Message):
             await message.reply(constants.BAD_MESSAGE_REF)
         else:
             await rsp.set_message(message.content, session)
-            await message.reply(constants.REPLY_RECEIVED)
+            await message.add_reaction(emoji=constants.SUCCESS_EMOJI)
 
     elif message.content.startswith(constants.COMMAND_PREFIX):
         await bot.process_commands(message)
     else:
         await MessageRequest.create(message.content, message.author.id, session)
-        await message.reply(constants.MESSAGE_REQUEST_RECEIVED)
+        await message.add_reaction(emoji=constants.SUCCESS_EMOJI)
 
 
 @bot.event

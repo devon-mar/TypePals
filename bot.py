@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import discord
 import os
 from discord.ext import commands
+from discord.ext.commands import CommandNotFound
 from models import Base, MessageRequest, Response
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

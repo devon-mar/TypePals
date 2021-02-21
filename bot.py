@@ -29,7 +29,9 @@ async def on_ready():
     print(f"Logged in as {bot.user.name} {bot.user.id}")
 
 
-@bot.command(name="ping")
+@bot.command(name="ping",
+             brief="Replies pong",
+             description="Literally just replies pong")
 async def ping(ctx):
     await ctx.reply("pong")
 

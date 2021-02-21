@@ -35,8 +35,11 @@ async def ping(ctx):
 async def get_msg(ctx):
     req_count = session.query(MessageRequest).count()
     if req_count > 0:
-        req = session.query(MessageRequest).first()
-        await req.send(ctx.channel, session)
+        req = session.query(MessageRequest).filter(MessageRequest.user_id != ctx.author.id).first()
+        if req is None:
+            await ctx.channel.send("There are no messages for you to read right now.")
+        else:
+            await req.send(ctx.channel, session)
     else:
         await ctx.channel.send("No messages!")
 

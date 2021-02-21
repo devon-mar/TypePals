@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import discord
 import os
 from discord.ext import commands
+from discord.ext.commands import CommandNotFound
 from models import Base, MessageRequest, Response
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -76,5 +77,11 @@ async def on_message(message: discord.Message):
     else:
         await MessageRequest.create(message.content, message.author.id, session)
         await message.channel.send("Received!")
+
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, CommandNotFound):
+        await ctx.reply(":no_entry: Invalid command")
 
 bot.run(DISCORD_TOKEN)

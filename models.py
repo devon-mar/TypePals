@@ -20,14 +20,14 @@ class MessageRequest(Base):
     def __repr__(self) -> str:
         return f"<MessageRequest {self.id}>"
 
-    async def send(self, channel, session):
+    async def send(self, channel: discord.DMChannel, session: Session) -> None:
         """
         Send the message request to a channel to be replied to or just read
         """
         await Response.send(self, channel, session)
 
     @classmethod
-    def create(cls, message, user_id, session):
+    def create(cls, message: str, user_id: int, session: Session) -> None:
         mr = cls(
             message=message,
             user_id=user_id,
@@ -37,7 +37,7 @@ class MessageRequest(Base):
         session.add(mr)
         session.commit()
 
-    def delete(self, session):
+    def delete(self, session) -> None:
         for r in self.responses:
             session.delete(r)
         session.delete(self)
@@ -60,7 +60,7 @@ class Response(Base):
         return f"<Response {self.id}>"
 
     @classmethod
-    async def send(cls, original: MessageRequest, channel, session):
+    async def send(cls, original: MessageRequest, channel: discord.DMChannel, session: Session) -> None:
         r = cls()
         sent_msg = await channel.send(original.message)
         r.discord_message = sent_msg.id

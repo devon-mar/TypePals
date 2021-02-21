@@ -29,7 +29,7 @@ async def on_ready():
 
 @bot.command(name="ping")
 async def ping(ctx):
-    await ctx.channel.send("pong")
+    await ctx.reply("pong")
 
 
 @bot.command(name="get")
@@ -38,11 +38,11 @@ async def get_msg(ctx):
     if req_count > 0:
         req = session.query(MessageRequest).filter(MessageRequest.user_id != ctx.author.id).first()
         if req is None:
-            await ctx.channel.send("There are no messages for you to read right now.")
+            await ctx.reply("There are no messages for you to read right now.")
         else:
             await req.send(ctx.channel, session)
     else:
-        await ctx.channel.send("No messages!")
+        await ctx.reply("No messages!")
 
 
 @bot.command(name="read")
@@ -68,6 +68,7 @@ async def on_message(message: discord.Message):
         rsp = session.query(Response).filter_by(discord_message=message.reference.message_id).first()
         if rsp is None:
             print(f"Ref not in DB: {message.reference.message_id}")
+            await message.reply(":no_entry: Could not find the message you replied to.")
         else:
             await rsp.set_message(message.content, session)
             await message.reply(":white_check_mark: Your replied has been received!")

@@ -12,8 +12,8 @@ from utils import render_template, check_message, get_image, ceildiv
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 DELETE_THRESHOLD = int(os.getenv("DELETE_THRESHOLD", 0))
-DB_URI = os.getenv("DB_URI", default="sqlite:///:memory:")
-engine = create_engine(DB_URI, echo=False)
+DATABASE_URL = os.getenv("DATABASE_URL", default="sqlite:///:memory:")
+engine = create_engine(DATABASE_URL, echo=False)
 Session = sessionmaker(bind=engine)
 session = Session()
 

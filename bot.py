@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import discord
 import os
+import constants
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound
 from models import Base, MessageRequest, Response
@@ -18,7 +19,7 @@ Base.metadata.create_all(engine)
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 
-bot = commands.Bot(command_prefix="/")
+bot = commands.Bot(command_prefix=constants.COMMAND_PREFIX)
 
 
 @bot.event
@@ -32,24 +33,24 @@ async def ping(ctx):
     await ctx.reply("pong")
 
 
-@bot.command(name="get")
+@bot.command(name=constants.GET_MSG_REQ_CMD)
 async def get_msg(ctx):
     req_count = session.query(MessageRequest).count()
     if req_count > 0:
         req = session.query(MessageRequest).filter(MessageRequest.user_id != ctx.author.id).first()
         if req is None:
-            await ctx.reply("There are no messages for you to read right now.")
+            await ctx.reply(constants.NO_MESSAGES)
         else:
             await req.send(ctx.channel, session)
     else:
-        await ctx.reply("No messages!")
+        await ctx.reply(constants.NO_MESSAGES)
 
 
-@bot.command(name="read")
+@bot.command(name=constants.RETRIEVE_MY_MSGS_CMD)
 async def retrieve_my_msgs(ctx):
     my_mrs = session.query(MessageRequest).filter_by(user_id=ctx.author.id)
     if my_mrs.count() == 0:
-        await ctx.channel.send(await render_template("no_requests.j2"))
+        await ctx.channel.send(constants.NO_REQUESTS)
     for req in my_mrs:
         mc = req.sent_messages.count()
         if mc == 0:
@@ -68,21 +69,21 @@ async def on_message(message: discord.Message):
         rsp = session.query(Response).filter_by(discord_message=message.reference.message_id).first()
         if rsp is None:
             print(f"Ref not in DB: {message.reference.message_id}")
-            await message.reply(":no_entry: Could not find the message you replied to.")
+            await message.reply(constants.BAD_MESSAGE_REF)
         else:
             await rsp.set_message(message.content, session)
-            await message.reply(":white_check_mark: Your replied has been received!")
+            await message.reply(constants.REPLY_RECEIVED)
 
-    elif message.content.startswith('/'):
+    elif message.content.startswith(constants.COMMAND_PREFIX):
         await bot.process_commands(message)
     else:
         await MessageRequest.create(message.content, message.author.id, session)
-        await message.reply(":white_check_mark: Request Received!")
+        await message.reply(constants.MESSAGE_REQUEST_RECEIVED)
 
 
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
-        await ctx.reply(":no_entry: Invalid command")
+        await ctx.reply(constants.INVALID_COMMAND)
 
 bot.run(DISCORD_TOKEN)

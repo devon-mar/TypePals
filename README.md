@@ -22,7 +22,7 @@ We hope this bot is used with good intentions to help others when they are feeli
  
 - Communicate with the bot by directly messaging them or simple commands!
 - Feel free to shamelessly vent your problems with complete privacy! 🔒
-- Responses are printed onto a jpg to look like a letter instead of a block of text!
+- Responses are printed onto a jpg to look like one of three letters instead of a block of text! 📨
 - Messages limited to 400 characters so it is kept concise and space efficient!
 - Filter to ensure hateful messages are kept out of the system, including variations of many
 different words! 🔞
@@ -42,6 +42,7 @@ Command | Usage
 <message/request> | Message the bot with any messages/requests to be sent out to others
 /read | Look at others' messages/requests and reply to them as you like
 /responses | View responses to your messages/requests
+/responses images | View responses on a jpg which looks like a letter
 /help | Brings up a quick menu to remind you of commands
 
 ## Setup 🔨

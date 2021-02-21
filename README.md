@@ -22,7 +22,7 @@ We hope this bot is used with good intentions to help others when they are feeli
  
 - Communicate with the bot by directly messaging them or simple commands!
 - Feel free to shamelessly vent your problems with complete privacy! 🔒
-- Responses are printed onto a letter jpg instead of just a block of text!
+- Responses are printed onto a jpg to look like a letter instead of a block of text!
 - Messages limited to 400 characters so it is kept concise and space efficient!
 - Filter to ensure hateful messages are kept out of the system, including variations of many
 different words! 🔞

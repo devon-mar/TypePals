@@ -27,7 +27,7 @@ class MessageRequest(Base):
         await Response.send(self, channel, session)
 
     @classmethod
-    async def create(cls, message, user_id, session):
+    def create(cls, message, user_id, session):
         mr = cls(
             message=message,
             user_id=user_id,
@@ -67,7 +67,7 @@ class Response(Base):
         original.responses.append(r)
         session.commit()
 
-    async def set_message(self, msg: discord.Message, session: Session) -> None:
+    def set_message(self, msg: discord.Message, session: Session) -> None:
         self.user_id = msg.author.id
         self.message = msg.content
         session.commit()

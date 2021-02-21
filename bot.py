@@ -7,7 +7,7 @@ from discord.ext.commands import CommandNotFound
 from models import Base, MessageRequest, Response
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from utils import render_template
+from utils import render_template, check_message
 
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
@@ -55,9 +55,9 @@ async def retrieve_my_msgs(ctx):
     for req in my_mrs:
         mc = req.responses.count()
         if mc == 0:
-            await ctx.channel.send(await render_template("no_replies.j2", req=req))
+            await ctx.channel.send(render_template("no_replies.j2", req=req))
         else:
-            await ctx.channel.send(await render_template("read_replies.j2", req=req, mc=mc))
+            await ctx.channel.send(render_template("read_replies.j2", req=req, mc=mc))
             if mc > DELETE_THRESHOLD:
                 req.delete(session)
 
@@ -68,19 +68,24 @@ async def on_message(message: discord.Message):
         return
 
     if message.reference is not None:
+        if not check_message(message.content):
+            await message.reply(constants.REJECT_MESSAGE)
+            return
         rsp = session.query(Response).filter_by(discord_message=message.reference.message_id).first()
         if rsp is None:
             print(f"Ref not in DB: {message.reference.message_id}")
             await message.reply(constants.BAD_MESSAGE_REF)
         else:
-            await rsp.set_message(message, session)
+            rsp.set_message(message, session)
             await message.add_reaction(emoji=constants.SUCCESS_EMOJI)
-
     elif message.content.startswith(constants.COMMAND_PREFIX):
         await bot.process_commands(message)
     else:
-        await MessageRequest.create(message.content, message.author.id, session)
-        await message.add_reaction(emoji=constants.SUCCESS_EMOJI)
+        if check_message(message.content):
+            MessageRequest.create(message.content, message.author.id, session)
+            await message.add_reaction(emoji=constants.SUCCESS_EMOJI)
+        else:
+            await message.reply(constants.REJECT_MESSAGE)
 
 
 @bot.event

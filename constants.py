@@ -6,3 +6,4 @@ GET_MSG_REQ_CMD = "get"
 RETRIEVE_MY_MSGS_CMD = "read"
 COMMAND_PREFIX = '/'
 SUCCESS_EMOJI = "✅"
+REJECT_MESSAGE = "Your message has been rejected."

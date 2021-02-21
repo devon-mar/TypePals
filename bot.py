@@ -36,15 +36,15 @@ async def ping(ctx):
 
 @bot.command(name=constants.GET_MSG_REQ_CMD)
 async def get_msg(ctx):
-    req_count = session.query(MessageRequest).count()
-    if req_count > 0:
-        req = session.query(MessageRequest).filter(MessageRequest.user_id != ctx.author.id).first()
-        if req is None:
-            await ctx.reply(constants.NO_MESSAGES)
-        else:
-            await req.send(ctx.channel, session)
-    else:
+    msg_req = (
+        session.query(MessageRequest)
+               .filter(MessageRequest.user_id != ctx.author.id)
+               .filter(~MessageRequest.sent_messages.any(Response.user_id == ctx.author.id)).first()
+    )
+    if msg_req is None:
         await ctx.reply(constants.NO_MESSAGES)
+    else:
+        await msg_req.send(ctx.channel, session)
 
 
 @bot.command(name=constants.RETRIEVE_MY_MSGS_CMD)
@@ -72,7 +72,7 @@ async def on_message(message: discord.Message):
             print(f"Ref not in DB: {message.reference.message_id}")
             await message.reply(constants.BAD_MESSAGE_REF)
         else:
-            await rsp.set_message(message.content, session)
+            await rsp.set_message(message, session)
             await message.add_reaction(emoji=constants.SUCCESS_EMOJI)
 
     elif message.content.startswith(constants.COMMAND_PREFIX):

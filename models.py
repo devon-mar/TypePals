@@ -1,3 +1,4 @@
+import discord
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, Session
 from sqlalchemy.ext.declarative import declarative_base
@@ -51,6 +52,7 @@ class Response(Base):
     reply_to = Column(Integer, ForeignKey("requests.id"))
     # The content of the reply
     message = Column(String(400), nullable=True)
+    user_id = Column(Integer)
 
     def __repr__(self) -> str:
         return f"<Response {self.id}>"
@@ -63,6 +65,7 @@ class Response(Base):
         original.sent_messages.append(r)
         session.commit()
 
-    async def set_message(self, msg: str, session: Session) -> None:
-        self.message = msg
+    async def set_message(self, msg: discord.Message, session: Session) -> None:
+        self.user_id = msg.author.id
+        self.message = msg.content
         session.commit()

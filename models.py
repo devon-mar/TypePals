@@ -1,5 +1,5 @@
 import discord
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy import Column, BigInteger, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, Session
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -12,7 +12,7 @@ class MessageRequest(Base):
     id = Column(Integer, primary_key=True)
     message = Column(String(400))
     # The user who sent out this request so that we can send them their responses
-    user_id = Column(Integer)
+    user_id = Column(BigInteger)
     responses = relationship("Response", backref="original_message", lazy="dynamic")
     replied = Column(Boolean)
     sent = Column(Boolean)
@@ -49,12 +49,12 @@ class Response(Base):
 
     id = Column(Integer, primary_key=True)
     # Replys to this discord message id are responses to the original message
-    discord_message = Column(Integer, unique=True)
+    discord_message = Column(BigInteger, unique=True)
     # The message that this is a reply to
     reply_to = Column(Integer, ForeignKey("requests.id"))
     # The content of the reply
     message = Column(String(400), nullable=True)
-    user_id = Column(Integer)
+    user_id = Column(BigInteger)
 
     def __repr__(self) -> str:
         return f"<Response {self.id}>"

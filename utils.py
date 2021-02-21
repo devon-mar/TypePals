@@ -1,4 +1,5 @@
 import jinja2
+from better_profanity import profanity
 
 
 def render_template(template: str, **kwargs) -> str:
@@ -11,4 +12,8 @@ def check_message(msg: str) -> bool:
     """
     Returns True if the message is appropriate.
     """
-    return "bad" not in msg
+    if len(msg) > 400 or profanity.contains_profanity(msg):
+        return False
+    else:
+        return True
+

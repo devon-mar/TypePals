@@ -25,7 +25,6 @@ bot = commands.Bot(command_prefix=constants.COMMAND_PREFIX)
 
 @bot.event
 async def on_ready():
-    bot.messages = []
     print(f"Logged in as {bot.user.name} {bot.user.id}")
 
 

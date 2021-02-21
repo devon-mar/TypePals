@@ -70,13 +70,13 @@ async def on_message(message: discord.Message):
             print(f"Ref not in DB: {message.reference.message_id}")
         else:
             await rsp.set_message(message.content, session)
-            await message.channel.send("Your replied has been received!")
+            await message.reply(":white_check_mark: Your replied has been received!")
 
     elif message.content.startswith('/'):
         await bot.process_commands(message)
     else:
         await MessageRequest.create(message.content, message.author.id, session)
-        await message.channel.send("Received!")
+        await message.reply(":white_check_mark: Request Received!")
 
 
 @bot.event

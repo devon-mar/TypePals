@@ -1,7 +1,7 @@
 > {{ req.message }}
 Has {{ mc }} replies:
 
-{% for reply in req.sent_messages %}
+{% for reply in req.responses %}
 {%   if reply.message %}
 ```
 {{ reply.message }}

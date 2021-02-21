@@ -62,7 +62,7 @@ class Response(Base):
         r = cls()
         sent_msg = await channel.send(original.message)
         r.discord_message = sent_msg.id
-        original.sent_messages.append(r)
+        original.responses.append(r)
         session.commit()
 
     async def set_message(self, msg: discord.Message, session: Session) -> None:

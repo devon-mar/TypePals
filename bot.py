@@ -9,7 +9,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from utils import render_template
 
-engine = create_engine("sqlite:///:memory:", echo=False)
+DB_URI = os.getenv("DB_URI", default="sqlite:///:memory:")
+engine = create_engine(DB_URI, echo=False)
 Session = sessionmaker(bind=engine)
 session = Session()
 

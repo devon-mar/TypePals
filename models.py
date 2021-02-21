@@ -41,7 +41,6 @@ class MessageRequest(Base):
         session.commit()
 
 
-
 class Response(Base):
     __tablename__ = "responses"
 

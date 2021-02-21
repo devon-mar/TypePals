@@ -13,7 +13,7 @@ class MessageRequest(Base):
     message = Column(String(400))
     # The user who sent out this request so that we can send them their responses
     user_id = Column(Integer)
-    sent_messages = relationship("Response", backref="original_message", lazy="dynamic")
+    responses = relationship("Response", backref="original_message", lazy="dynamic")
     replied = Column(Boolean)
     sent = Column(Boolean)
 

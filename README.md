@@ -25,7 +25,7 @@ We hope this bot is used with good intentions to help others when they are feeli
 - Responses are printed onto a letter jpg instead of just a block of text!
 - Messages limited to 400 characters so it is kept concise and space efficient!
 - Filter to ensure hateful messages are kept out of the system, including variations of many
-different words! 🛑
+different words! 🔞
 
 
 ### Usage
@@ -47,24 +47,27 @@ Command | Usage
 ## Setup 🔨
 1. ```git clone``` the repository
 
-2. Extract the zip file into a folder
 3. Create a ```.txt``` file, but change its name to just ```.env```! 
     3. **Note that there is NO name in front of  ```.env```**
 4. Open up the newly created ```.env``` file using Notepad or another of your choice
 5. Follow the ```Creating a Bot Account``` on this site:
 ```https://discordpy.readthedocs.io/en/latest/discord.html```
 6. Copy the token from step 7 (of the site)
-7. Within ```.env```, there are **three** lines you can add:
-    7. ```DISCORD_TOKEN = <the_token_you_obtained_from_the_prior_sites>```
-        7. REQUIRED
-    7. ```DELETE_THRESHOLD = <integer_greater_than_0>``` 
-        7. OPTIONAL - More information in Questions section
-    7. ```DATABASE_URL = <example_address_in_questions>``` 
-        7. OPTIONAL - More information in Questions section
+7. Within ```.env```, set the following variable:
+    7. ```DISCORD_TOKEN = <the_token_you_obtained_from_the_prior_site>```
+        7. THIS IS REQUIRED TO RUN
 8. Go back to ```https://discordpy.readthedocs.io/en/latest/discord.html``` and complete the 
 ```Inviting Your Bot``` section
 9. Run ```bot.py``` file and your bot should turn Online on Discord
 10. Directly message the bot whenever you feel like it! 🎉
+
+### Environment Variables 🔑
+Environment Variable  | Usage
+---------------------|------
+```DISCORD_TOKEN``` | Used to specifically link your ```bot.py``` with the Discord bot
+```DELETE_THRESHOLD``` | Limits how many responses a message can get before the message is removed from the pile of messages!
+```DATABASE_URL``` | Allows for messages to be kept even after turning off ```bot.py```
+
 
 ### Questions 🆘
 - How do I send out a message to vent my problems or request for advice?
@@ -77,12 +80,6 @@ Command | Usage
     
 - How do I view responses people sent back to my messages?
     - Use the command ```/responses``` to see your responses on letters!
-
-```.env``` variable  | Usage
----------------------|------
-```DISCORD_TOKEN``` | Used to specifically link your ```bot.py``` with the Discord bot
-```DELETE_THRESHOLD``` | Limits how many responses a message can get before the message is removed from the pile of messages!
-```DATABASE_URL``` | Allows for messages to be kept even after turning off ```bot.py```
 
 - What happens if I don't have a ```DATABASE_URL```?
     - The messages and responses are all deleted when you turn off ```bot.py```, so if you want to

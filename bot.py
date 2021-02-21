@@ -9,6 +9,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from utils import render_template
 
+load_dotenv()
+DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
+DELETE_THRESHOLD = int(os.getenv("DELETE_THRESHOLD", 0))
 DB_URI = os.getenv("DB_URI", default="sqlite:///:memory:")
 engine = create_engine(DB_URI, echo=False)
 Session = sessionmaker(bind=engine)
@@ -16,9 +19,6 @@ session = Session()
 
 Base.metadata.create_all(engine)
 
-
-load_dotenv()
-DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 
 bot = commands.Bot(command_prefix=constants.COMMAND_PREFIX)
 
@@ -66,7 +66,8 @@ async def retrieve_my_msgs(ctx):
             await ctx.channel.send(await render_template("no_replies.j2", req=req))
         else:
             await ctx.channel.send(await render_template("read_replies.j2", req=req, mc=mc))
-            req.delete(session)
+            if mc > DELETE_THRESHOLD:
+                req.delete(session)
 
 
 @bot.event

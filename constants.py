@@ -1,4 +1,4 @@
-NO_MESSAGES = "You haven't received a response yet... come back later! :clock3:"
+NO_MESSAGES = "There are no messages to read/reply to! :frowning: Check again later!"
 NO_REQUESTS = "You haven't sent out any messages to receive responses! :confused:"
 BAD_MESSAGE_REF = ":no_entry: Could not find the message you replied to."
 INVALID_COMMAND = ":no_entry: Invalid command"

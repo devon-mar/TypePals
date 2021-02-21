@@ -1,9 +1,9 @@
-NO_MESSAGES = "There are no messages for you to read right now."
-NO_REQUESTS = "You have no message requests."
+NO_MESSAGES = "You haven't received a response yet... come back later! :clock3:"
+NO_REQUESTS = "You haven't sent out any messages to receive responses! :confused:"
 BAD_MESSAGE_REF = ":no_entry: Could not find the message you replied to."
 INVALID_COMMAND = ":no_entry: Invalid command"
 GET_MSG_REQ_CMD = "reply"
 RETRIEVE_MY_MSGS_CMD = "responses"
 COMMAND_PREFIX = '/'
 SUCCESS_EMOJI = "✅"
-REJECT_MESSAGE = "Your message has been rejected."
+REJECT_MESSAGE = ":x: Your message has been rejected!"

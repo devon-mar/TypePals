@@ -36,7 +36,7 @@ different words! 🛑
 - View the responses to your messages/requests when you would like!
 - Send out nice messages to others to make their day better! 😀
 
-### Commands 🔌 :gear:
+### Commands 🔌
 Command | Usage
 --------|------------
 <message/request> | Message the bot with any messages/requests to be sent out to others

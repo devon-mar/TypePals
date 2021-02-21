@@ -19,8 +19,12 @@ session = Session()
 
 Base.metadata.create_all(engine)
 
+help_command = commands.DefaultHelpCommand(
+    no_category = 'Commands'
+)
 
-bot = commands.Bot(command_prefix=constants.COMMAND_PREFIX)
+
+bot = commands.Bot(command_prefix=constants.COMMAND_PREFIX, help_command=help_command)
 
 
 @bot.event
@@ -59,7 +63,7 @@ async def get_msg(ctx):
 
 @bot.command(
     name=constants.RETRIEVE_MY_MSGS_CMD,
-    brief="Bot sends you the responses sent to your message/request",
+    brief="Bot retrieves the responses sent to your message/request",
     description="The bot will send back the responses to each of your messages/requests."
 )
 async def retrieve_my_msgs(ctx):

@@ -45,7 +45,7 @@ async def get_msg(ctx):
     msg_req = (
         session.query(MessageRequest)
                .filter(MessageRequest.user_id != ctx.author.id)
-               .filter(~MessageRequest.sent_messages.any(Response.user_id == ctx.author.id)).first()
+               .filter(~MessageRequest.responses.any(Response.user_id == ctx.author.id)).first()
     )
     if msg_req is None:
         await ctx.reply(constants.NO_MESSAGES)
@@ -61,7 +61,7 @@ async def retrieve_my_msgs(ctx):
     if my_mrs.count() == 0:
         await ctx.channel.send(constants.NO_REQUESTS)
     for req in my_mrs:
-        mc = req.sent_messages.count()
+        mc = req.responses.count()
         if mc == 0:
             await ctx.channel.send(await render_template("no_replies.j2", req=req))
         else:

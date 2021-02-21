@@ -70,8 +70,7 @@ async def retrieve_my_msgs(ctx: Context, as_images: str = ""):
         if mc == 0:
             await ctx.send(render_template("no_replies.j2", req=req))
         elif as_images == "images":
-            files = [get_image("1.jpg", r.message) for r in req.responses]
-            # TODO fix files limit
+            files = [get_image(r.message) for r in req.responses]
             page_count = ceildiv(len(files), 10)
             for i in range(page_count):
                 await ctx.send(

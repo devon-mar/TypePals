@@ -4,6 +4,7 @@ import io
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
+import random
 
 from better_profanity import profanity
 import textwrap
@@ -25,24 +26,20 @@ def check_message(msg: str) -> bool:
         return True
 
 
-def get_image(background: str, msg: str) -> discord.File:
-
+def get_image(msg: str) -> discord.File:
     font_type = ImageFont.truetype("Font/arial.ttf", 15)
 
-    img = Image.open("backgrounds.1.jpg")
-    WIDTH , HEIGHT = img.size
+    img = Image.open(f"backgrounds/{random.randint(0,2)}.jpg")
+    width, height = img.size
 
     lines = textwrap.wrap(msg, width=50)
 
     draw = ImageDraw.Draw(img)
 
     for line in lines:
-        width = height = font_type.getsize(line)
-        draw.text((WIDTH / 10, HEIGHT / 5), msg, (0, 0, 0), font=font_type)
-        HEIGHT += 100
+        draw.text((width / 10, height / 5), msg, (0, 0, 0), font=font_type)
+        height += 100
 
-
-    img = Image.open(f"backgrounds/{background}")
     bio = io.BytesIO()
     img.save(bio, format="PNG")
     bio.seek(0)

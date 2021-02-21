@@ -12,7 +12,7 @@ def check_message(msg: str) -> bool:
     """
     Returns True if the message is appropriate.
     """
-    if (profanity.contains_profanity(msg)) or (len(msg) > 400):
+    if len(msg) > 400 or profanity.contains_profanity(msg):
         return False
     else:
         return True

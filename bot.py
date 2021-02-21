@@ -26,12 +26,15 @@ async def on_ready():
     print(f"Logged in as {bot.user.name} {bot.user.id}")
 
 
-@bot.command(name="ping")
+@bot.command(name="ping", brief="Replies pong", description="Literally just replies pong")
 async def ping(ctx):
     await ctx.channel.send("pong")
 
 
-@bot.command(name="get")
+@bot.command(name="respond", brief="Bot will send a message or request you can reply to",
+             description="The messages and requests that come from other users. You can reply "
+                         "to them through Discord's own reply feature by right clicking the message"
+                         ", then \"Reply\".")
 async def get_msg(ctx):
     req_count = session.query(MessageRequest).count()
     if req_count > 0:
@@ -44,7 +47,8 @@ async def get_msg(ctx):
         await ctx.channel.send("No messages!")
 
 
-@bot.command(name="read")
+@bot.command(name="get_responses", brief="Bot sends you the responses sent to your message/request",
+             description="The bot will send back the responses to each of your messages/requests.")
 async def retrieve_my_msgs(ctx):
     my_mrs = session.query(MessageRequest).filter_by(user_id=ctx.author.id)
     if my_mrs.count() == 0:

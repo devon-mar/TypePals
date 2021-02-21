@@ -20,7 +20,7 @@ session = Session()
 Base.metadata.create_all(engine)
 
 help_command = commands.DefaultHelpCommand(
-    no_category='Commands'
+    no_category="Commands"
 )
 
 

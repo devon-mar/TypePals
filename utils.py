@@ -27,7 +27,7 @@ def check_message(msg: str) -> bool:
 
 
 def get_image(msg: str) -> discord.File:
-    font_type = ImageFont.truetype("Font/arial.ttf", 15)
+    font_type = ImageFont.truetype("fonts/arial.ttf", 15)
 
     img = Image.open(f"backgrounds/{random.randint(0,2)}.jpg")
     width, height = img.size

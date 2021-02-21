@@ -38,6 +38,8 @@ class MessageRequest(Base):
         session.commit()
 
     def delete(self, session):
+        for r in self.responses:
+            session.delete(r)
         session.delete(self)
         session.commit()
 

@@ -3,7 +3,7 @@ import discord
 import os
 from discord.ext import commands
 from models import Base, MessageRequest, Response
-from sqlalchemy import engine, create_engine
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from utils import render_template
 

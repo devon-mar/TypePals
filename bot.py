@@ -3,11 +3,11 @@ import discord
 import os
 import constants
 from discord.ext import commands
-from discord.ext.commands import CommandNotFound
+from discord.ext.commands import CommandNotFound, Context
 from models import Base, MessageRequest, Response
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from utils import render_template, check_message
+from utils import render_template, check_message, get_image, ceildiv
 
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
@@ -29,7 +29,6 @@ bot = commands.Bot(command_prefix=constants.COMMAND_PREFIX, help_command=help_co
 
 @bot.event
 async def on_ready():
-    bot.messages = []
     print(f"Logged in as {bot.user.name} {bot.user.id}")
 
 
@@ -38,7 +37,7 @@ async def on_ready():
     brief="Replies pong",
     description="Literally just replies pong"
 )
-async def ping(ctx):
+async def ping(ctx: Context):
     await ctx.reply("pong")
 
 
@@ -49,7 +48,7 @@ async def ping(ctx):
     "to them by right clicking the message and using Discord's own "
     "\"Reply\" feature."
 )
-async def get_msg(ctx):
+async def get_msg(ctx: Context):
     msg_req = (
         session.query(MessageRequest)
                .filter(MessageRequest.user_id != ctx.author.id)
@@ -66,14 +65,23 @@ async def get_msg(ctx):
     brief="Bot retrieves the responses sent to your message/request",
     description="The bot will send back the responses to each of your messages/requests."
 )
-async def retrieve_my_msgs(ctx):
+async def retrieve_my_msgs(ctx: Context, as_images: str = ""):
     my_mrs = session.query(MessageRequest).filter_by(user_id=ctx.author.id)
     if my_mrs.count() == 0:
-        await ctx.channel.send(constants.NO_REQUESTS)
+        await ctx.send(constants.NO_REQUESTS)
     for req in my_mrs:
         mc = req.responses.count()
         if mc == 0:
-            await ctx.channel.send(render_template("no_replies.j2", req=req))
+            await ctx.send(render_template("no_replies.j2", req=req))
+        elif as_images == "images":
+            files = [get_image("1.jpg", r.message) for r in req.responses]
+            # TODO fix files limit
+            page_count = ceildiv(len(files), 10)
+            for i in range(page_count):
+                await ctx.send(
+                    render_template("read_replies_img.j2", req=req, i=i, pc=page_count),
+                    files=files[i * 10:i * 10 + 10]
+                )
         else:
             await ctx.channel.send(render_template("read_replies.j2", req=req, mc=mc))
             if mc > DELETE_THRESHOLD:
@@ -107,7 +115,7 @@ async def on_message(message: discord.Message):
 
 
 @bot.event
-async def on_command_error(ctx, error):
+async def on_command_error(ctx: Context, error: Exception):
     if isinstance(error, CommandNotFound):
         await ctx.reply(constants.INVALID_COMMAND)
 

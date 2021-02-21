@@ -29,7 +29,7 @@ def get_image(background: str, msg: str) -> discord.File:
 
     font_type = ImageFont.truetype("Font/arial.ttf", 15)
 
-    img = Image.open("backgrounds.1.jpg")
+    img = Image.open(f"backgrounds/{background}")
     WIDTH , HEIGHT = img.size
 
     lines = textwrap.wrap(msg, width=50)
@@ -37,12 +37,9 @@ def get_image(background: str, msg: str) -> discord.File:
     draw = ImageDraw.Draw(img)
 
     for line in lines:
-        width = height = font_type.getsize(line)
         draw.text((WIDTH / 10, HEIGHT / 5), msg, (0, 0, 0), font=font_type)
         HEIGHT += 100
 
-
-    img = Image.open(f"backgrounds/{background}")
     bio = io.BytesIO()
     img.save(bio, format="PNG")
     bio.seek(0)

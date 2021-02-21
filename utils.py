@@ -1,4 +1,7 @@
+import discord
 import jinja2
+import io
+from PIL import Image
 from better_profanity import profanity
 
 
@@ -17,3 +20,10 @@ def check_message(msg: str) -> bool:
     else:
         return True
 
+
+def get_image(background: str, msg: str) -> discord.File:
+    img = Image.open(f"backgrounds/{background}")
+    bio = io.BytesIO()
+    img.save(bio, format="PNG", filename="reply.PNG")
+    bio.seek(0)
+    return discord.File(bio)

@@ -3,7 +3,7 @@ import discord
 import os
 import constants
 from discord.ext import commands
-from discord.ext.commands import CommandNotFound, Paginator
+from discord.ext.commands import CommandNotFound
 from models import Base, MessageRequest, Response
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

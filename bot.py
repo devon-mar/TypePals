@@ -2,7 +2,16 @@ from dotenv import load_dotenv
 import discord
 import os
 from discord.ext import commands
-from models import MessageRequest
+from models import Base, MessageRequest, Response
+from sqlalchemy import engine, create_engine
+from sqlalchemy.orm import sessionmaker
+from utils import render_template
+
+engine = create_engine("sqlite:///:memory:", echo=False)
+Session = sessionmaker(bind=engine)
+session = Session()
+
+Base.metadata.create_all(engine)
 
 
 load_dotenv()
@@ -24,12 +33,26 @@ async def ping(ctx):
 
 @bot.command(name="get")
 async def get_msg(ctx):
-    if len(bot.messages) > 0:
-        # TODO: change this
-        msg_req = bot.messages[0]
-        await msg_req.send(ctx.channel)
+    req_count = session.query(MessageRequest).count()
+    if req_count > 0:
+        req = session.query(MessageRequest).first()
+        await req.send(ctx.channel, session)
     else:
         await ctx.channel.send("No messages!")
+
+
+@bot.command(name="read")
+async def retrieve_my_msgs(ctx):
+    my_mrs = session.query(MessageRequest).filter_by(user_id=ctx.author.id)
+    if my_mrs.count() == 0:
+        await ctx.channel.send(await render_template("no_requests.j2"))
+    for req in my_mrs:
+        mc = req.sent_messages.count()
+        if mc == 0:
+            await ctx.channel.send(await render_template("no_replies.j2", req=req))
+        else:
+            await ctx.channel.send(await render_template("read_replies.j2", req=req, mc=mc))
+            req.delete(session)
 
 
 @bot.event
@@ -38,17 +61,17 @@ async def on_message(message: discord.Message):
         return
 
     if message.reference is not None:
-        # TODO: this is terrible
-        for m in bot.messages:
-            if m.reply_id == message.reference.message_id:
-                m.replied = True
-                user = await bot.fetch_user(m.user_id)
-                await user.send(f"You got a reply: {message.content}")
-                await message.channel.send("Sent your reply")
+        rsp = session.query(Response).filter_by(discord_message=message.reference.message_id).first()
+        if rsp is None:
+            print(f"Ref not in DB: {message.reference.message_id}")
+        else:
+            await rsp.set_message(message.content, session)
+            await message.channel.send("Your replied has been received!")
+
     elif message.content.startswith('/'):
         await bot.process_commands(message)
     else:
-        bot.messages.append(MessageRequest(message.content, message.author.id))
+        await MessageRequest.create(message.content, message.author.id, session)
         await message.channel.send("Received!")
 
 bot.run(DISCORD_TOKEN)

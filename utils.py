@@ -27,3 +27,8 @@ def get_image(background: str, msg: str) -> discord.File:
     img.save(bio, format="PNG", filename="reply.PNG")
     bio.seek(0)
     return discord.File(bio)
+
+
+def ceildiv(a, b):
+    # https://stackoverflow.com/questions/14822184/is-there-a-ceiling-equivalent-of-operator-in-python
+    return -(-a // b)

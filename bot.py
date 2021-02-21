@@ -3,11 +3,11 @@ import discord
 import os
 import constants
 from discord.ext import commands
-from discord.ext.commands import CommandNotFound
+from discord.ext.commands import CommandNotFound, Paginator
 from models import Base, MessageRequest, Response
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from utils import render_template, check_message, get_image
+from utils import render_template, check_message, get_image, ceildiv
 
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
@@ -51,7 +51,6 @@ async def get_msg(ctx):
                .filter(MessageRequest.user_id != ctx.author.id)
                .filter(~MessageRequest.responses.any(Response.user_id == ctx.author.id)).first()
     )
-    print("Finished!")
     if msg_req is None:
         await ctx.reply(constants.NO_MESSAGES)
     else:
@@ -66,15 +65,20 @@ async def get_msg(ctx):
 async def retrieve_my_msgs(ctx, as_image: str = ""):
     my_mrs = session.query(MessageRequest).filter_by(user_id=ctx.author.id)
     if my_mrs.count() == 0:
-        await ctx.channel.send(constants.NO_REQUESTS)
+        await ctx.send(constants.NO_REQUESTS)
     for req in my_mrs:
         mc = req.responses.count()
         if mc == 0:
-            await ctx.channel.send(render_template("no_replies.j2", req=req))
+            await ctx.send(render_template("no_replies.j2", req=req))
         elif as_image == "image":
             files = [get_image("1.jpg", r.message) for r in req.responses]
             # TODO fix files limit
-            await ctx.send(render_template("read_replies_img.j2", req=req, mc=mc), files=files[:10])
+            page_count = ceildiv(files, 10)
+            for i in range(page_count):
+                await ctx.send(
+                    render_template("read_replies_img.j2", req=req, i=i, pc=page_count),
+                    files=files[i * 10:i * 10 + 10]
+                )
         else:
             await ctx.channel.send(render_template("read_replies.j2", req=req, mc=mc))
             if mc > DELETE_THRESHOLD:

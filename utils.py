@@ -37,7 +37,7 @@ def get_image(msg: str) -> discord.File:
     draw = ImageDraw.Draw(img)
 
     for line in lines:
-        draw.text((width / 10, height / 5), msg, (0, 0, 0), font=font_type)
+        draw.text((width / 10, height / 5), line, (0, 0, 0), font=font_type)
         height += 100
 
     bio = io.BytesIO()

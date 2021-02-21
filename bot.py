@@ -3,7 +3,7 @@ import discord
 import os
 import constants
 from discord.ext import commands
-from discord.ext.commands import CommandNotFound
+from discord.ext.commands import CommandNotFound, Context
 from models import Base, MessageRequest, Response
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -34,7 +34,7 @@ async def on_ready():
     brief="Replies pong",
     description="Literally just replies pong"
 )
-async def ping(ctx):
+async def ping(ctx: Context):
     await ctx.reply("pong")
 
 
@@ -45,7 +45,7 @@ async def ping(ctx):
     "to them by right clicking the message and using Discord's own "
     "\"Reply\" feature."
 )
-async def get_msg(ctx):
+async def get_msg(ctx: Context):
     msg_req = (
         session.query(MessageRequest)
                .filter(MessageRequest.user_id != ctx.author.id)
@@ -62,7 +62,7 @@ async def get_msg(ctx):
     brief="Bot sends you the responses sent to your message/request",
     description="The bot will send back the responses to each of your messages/requests."
 )
-async def retrieve_my_msgs(ctx, as_images: str = ""):
+async def retrieve_my_msgs(ctx: Context, as_images: str = ""):
     my_mrs = session.query(MessageRequest).filter_by(user_id=ctx.author.id)
     if my_mrs.count() == 0:
         await ctx.send(constants.NO_REQUESTS)
@@ -112,7 +112,7 @@ async def on_message(message: discord.Message):
 
 
 @bot.event
-async def on_command_error(ctx, error):
+async def on_command_error(ctx: Context, error: Exception):
     if isinstance(error, CommandNotFound):
         await ctx.reply(constants.INVALID_COMMAND)
 

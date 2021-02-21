@@ -82,15 +82,11 @@ Environment Variable  | Usage
 - How do I view responses people sent back to my messages?
     - Use the command ```/responses``` to see your responses on letters!
 
-- What happens if I don't have a ```DATABASE_URL```?
-    - The messages and responses are all deleted when you turn off ```bot.py```, so if you want to
-    keep them even after turning off the bot, you will need a ```DATABASE_URL```!
-         
-- What happens if it goes over the ```DELETE_THRESHOLD``` and I haven't used ```/responses``` to
-view responses to my messages?
-    - Don't worry! Your messages remain past the ```DELETE_THRESHOLD``` until you use 
-    ```/responses``` to view the responses! Note that if you DO NOT have a ```DATABASE_URL```, it will
-    still be deleted when you turn off ```bot.py```.
+- How many jpg options are there for the letter background that comes from ```/responses images```?
+    - There are three options which is randomly selected
     
-- What should a ```DATABASE_URL``` look like?
-    - ```sqlite:////tmp/test.db```
+- What happens if I restart the bot?
+    - If you don't have a ```DATABASE_URL```, your messages and responses will be deleted, otherwise,
+    everything remains the same!
+    
+

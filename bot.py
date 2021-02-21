@@ -5,7 +5,7 @@ import constants
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound
 from models import Base, MessageRequest, Response
-from sqlalchemy import create_engine, func
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from utils import render_template, check_message, get_image
 

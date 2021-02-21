@@ -1,0 +1,8 @@
+> {{ req.message }}
+Has {{ mc }} replies:
+
+{% for reply in req.sent_messages %}
+{%   if reply.message %}
+* {{ reply.message }}
+{%   endif %}
+{% endfor %}

@@ -34,7 +34,12 @@ async def ping(ctx):
     await ctx.reply("pong")
 
 
-@bot.command(name=constants.GET_MSG_REQ_CMD)
+@bot.command(
+    name=constants.GET_MSG_REQ_CMD,
+    brief="Bot will send a message or request you can reply to",
+    description="The messages and requests that come from other users. You can reply to them "
+                "through Discord's own reply feature by right clicking the message, then \"Reply\"."
+)
 async def get_msg(ctx):
     req_count = session.query(MessageRequest).count()
     if req_count > 0:
@@ -47,7 +52,11 @@ async def get_msg(ctx):
         await ctx.reply(constants.NO_MESSAGES)
 
 
-@bot.command(name=constants.RETRIEVE_MY_MSGS_CMD)
+@bot.command(
+    name=constants.RETRIEVE_MY_MSGS_CMD,
+    brief="Bot sends you the responses sent to your message/request",
+    description="The bot will send back the responses to each of your messages/requests."
+)
 async def retrieve_my_msgs(ctx):
     my_mrs = session.query(MessageRequest).filter_by(user_id=ctx.author.id)
     if my_mrs.count() == 0:

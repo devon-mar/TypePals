@@ -26,6 +26,7 @@ async def on_ready():
     bot.messages = []
     print(f"Logged in as {bot.user.name} {bot.user.id}")
 
+
 @bot.command(name="ping")
 async def ping(ctx):
     await ctx.reply("pong")
@@ -56,10 +57,13 @@ async def retrieve_my_msgs(ctx):
         else:
             await ctx.channel.send(await render_template("read_replies.j2", req=req, mc=mc))
             req.delete(session)
+
+
 @bot.event
 async def on_message(message: discord.Message):
     if not isinstance(message.channel, discord.channel.DMChannel) or message.author.bot:
         return
+
     if message.reference is not None:
         rsp = session.query(Response).filter_by(discord_message=message.reference.message_id).first()
         if rsp is None:
